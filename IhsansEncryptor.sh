@@ -1,11 +1,14 @@
 #usr/bin/bash
+#Please note that certain functions may seem disorganized. But that is to comply with bash rules (Without which the script would not run).
 usageFunc (){
+	#This function is to guide the user about the usage of the script. It is invoked everytime user goes wrong as well, in order to correct him/her.
 	echo "======================================================================================================================================================="
 	echo "Ihsan's Encryptor Usage."
 	echo "+++++++++++++++++++++++++"
 	echo "Enter Space seperated arguments corresponding to your needs. (You may run the script without arguments as well. Arguments are for quicker access)"
 	echo -e "\nFor Symmetric Encyptions: ./IhsanEncryptor.sh enc <Encyption Algorithm> <directory path>"
 	echo "Availalble Encyption algorithms are ( All except des3 and rc4 are cbc algorithms ): bf, rc2, rc4, des, des3, aes-128, aes-192, aes-256"
+	echo "Please note that entering and verifying passwords are mandatory for symmetric encryption"
 	echo -e "\nFor Decrypting symmetric Encryptions : ./IhsanEncryptor dec <Encyption Algorithm> <Encrypted file path>"
 	echo -e "\nFor Generating Asymmetric key-pairs: ./IhsanEncryptor asgen"
 	echo -e "\nFor Asymmetric Encryptions : ./IhsansEncryptor asenc <Path to .pem file with public key> <directory path>"
@@ -18,6 +21,10 @@ usageFunc (){
 }
 
 symEnc(){
+	#This function handles symmetric encryptions. It requires 2 inputs from the user : Directory to encrypt and algorithm
+	#Here a file is unique filename is used to avoid overwriting an existing file. (Using epoch time).
+	#Users MUST enter a password while encrypting and verify it.
+	#The directory is also compressed to the max amount upon encryption in order to save space.
 	if [ -d $2 ];then
 		echo "Encrypt ${2} using ${1}? Enter y/n"
 		read ch
@@ -33,7 +40,7 @@ symEnc(){
 			else
 				echo "There was some problem. Could not encrypt directory."
 			fi
-			sleep 5
+			sleep 7
 			disp
 			showMenu
 			else
@@ -49,6 +56,9 @@ symEnc(){
 }
 
 symDec(){
+	#This function handles symmertic decryption. User needs to enter the path to the encrypted file encrypted and the algorithm used to encrypt the file.
+	#Similar to the encryption function, this will create a unique directory as the output. Users must enter the password when prompted while decrypting.
+	#This does the reverse process of encryption and decompresses directories upon decryption.
 	echo "Decrypting $2 using $1 algorithm."
 	if [ -f $2 ];then
 		temp=`echo $(date +%s)`
@@ -66,7 +76,7 @@ symDec(){
 		else
 			echo "There was some problem. Could not decrypt."
 		fi
-		sleep 5
+		sleep 7
 		disp
 		showMenu
 	else
@@ -77,18 +87,22 @@ symDec(){
 }
 
 asGen(){
+	#This function is resposible of generating RSA public and private keys.
+	#Both will be available in the current working directory.
 	echo "The private and public key pair will be saved to the current directory."
 	openssl genrsa -out private.pem 2048
 	echo "The private key was created. filename : private.pem"
 	openssl rsa -in private.pem -pubout -out public.pem
 	echo "The private key was created. filename : public.pem "
 	echo "Task complete!"
-	sleep 5
+	sleep 7
 	disp
 	showMenu
 	}
 
 asEnc(){
+	#This function is responsible for encrypting directories using the public key. Users must give path to public key and path to directory to be encrypted.
+	#This will also create an unique file with the RSAENC suffix and it will also compress it to the max upon encryption.
 	if [ -d $2 ];then
 		echo "Encrypting directory: $2 using the public key: $1 "
 		temp=`echo $(date +%s)`
@@ -102,7 +116,7 @@ asEnc(){
 		else
 			echo "There was some problem. Could not encrypt."
 		fi
-		sleep 5
+		sleep 7
 		disp
 		showMenu
 	else
@@ -114,6 +128,8 @@ asEnc(){
 }
 
 asDec(){
+	#This function decrypts files that were encrypted using the public key. User should give the encrypted file path and path to the private key file.
+	#A unique directory is created as the ourput with RSADEC suffix.
 	if [ -f $2 ];then
 		echo "Decrypting $2 using private key: $1  "
 
@@ -132,7 +148,7 @@ asDec(){
 			else
 				echo "There was some problem. Could not decrypt."
 			fi
-			sleep 5
+			sleep 7
 			disp
 			showMenu
 	else
@@ -144,6 +160,8 @@ asDec(){
 }
 
 sign(){
+	#This function is used to sign data. As inputs this funtion takes, the path to the directory to be signed and the path to the private key.
+	#The output is an unique file with RSASIGN suffix.
 	if [ -d $2 ];then
 		echo "Signing directory: $2 using the private key: $1 "
 
@@ -158,7 +176,7 @@ sign(){
 		else
 			echo "There was some problem. Could not Sign."
 		fi
-		sleep 5
+		sleep 7
 		disp
 		showMenu
 	else
@@ -169,6 +187,8 @@ sign(){
 }
 
 verify(){
+	#This function verifies a sigend file. User must give path to the signed file and the pat to the public key file.
+	#Output is an unique directory with RSAUNSIGNED suffix.
 	if [ -f $2 ];then
 		echo "verifying signed content: $2 using public key: $1 "
 		
@@ -187,7 +207,7 @@ verify(){
 		else
 			echo "There was some problem. Could not verify."
 		fi
-		sleep 5
+		sleep 7
 		disp
 		showMenu
 
@@ -200,6 +220,8 @@ verify(){
 }
 
 genHash(){
+	#This function is used for generating hash values. User needs to give hashing Algorithm and path to file
+	#Output is the hash value, which the user can save to a file if he/she desires when prompted.
 	if [ -f $2 ];then
 		echo "Generating $1 hash value for $2 "
 		openssl dgst -${1} $2
@@ -220,6 +242,7 @@ genHash(){
 	fi	
 }
 disp(){
+	#This function is just formatting. It gives bit of look and feel and some useful information.
 clear
 echo -e "\n======================================================================================================================================================="
 echo -e "=======================================================================================================================================================\n"
@@ -231,6 +254,8 @@ echo "Detailed illustration on usage : https://alphagreytux.wordpress.com/2017/0
 echo "======================================================================================================================================================="
 }
 showMenu(){
+	#This function is responsible for guiding users in order to get there work done as required.
+	#Users enter numbers corresponding to what they need.
 	echo "Main Menu"
 	echo "++++++++++"
 	echo "1. Encrypt a directory."
@@ -529,7 +554,8 @@ showMenu(){
 	esac
 	
 }
-
+#This is where the script starts to execute. This script supports command line arguments as well for faster access. So it checks for command line arguments.
+#User Inputs are validated and messages are displayed.
 disp
 if [ $# -eq 0 ];then 
 		showMenu
