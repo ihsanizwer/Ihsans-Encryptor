@@ -21,7 +21,6 @@ Apart from the user guided method in Step 3 above, you can use command line argu
 
 
 For more on usage with examples and troubleshooting, please visit :
-https://alphagreytux.wordpress.com/2017/04/07/encrypting-and-decrypting-direcotories-using-a-free-tool-developed-by-me/
+http://hackerintent.co.nf/2017/04/07/script-wrote-encrypts-archives-folders/
 
-More help/ideas/suggestions, please visit :
-https://alphagreytux.wordpress.com/contact/
+PS : AlphaGreyTux is my former blog and I don't use it anymore. Above link is for the newer one.
