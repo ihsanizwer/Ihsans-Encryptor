@@ -21,6 +21,6 @@ Apart from the user guided method in Step 3 above, you can use command line argu
 
 
 For more on usage with examples and troubleshooting, please visit :
-http://hackerintent.co.nf/2017/04/07/script-wrote-encrypts-archives-folders/
+https://ihsanizwer.tk/tech/2017/04/07/script-wrote-encrypts-archives-folders/
 
 PS : AlphaGreyTux is my former blog and I don't use it anymore. Above link is for the newer one.
